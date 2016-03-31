@@ -19,16 +19,18 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 
 script:
+  - sbt ++$TRAVIS_SCALA_VERSION "set scalaJSStage in Global := ${STAGE}OptStage" 'show test/test:scalaJSLinkedFile'
   - sbt ++$TRAVIS_SCALA_VERSION "set scalaJSStage in Global := ${STAGE}OptStage" $TEST
   - bin/checkDevOnly
 
 # Use PhantomJS 2
 # https://mediocre.com/forum/topics/phantomjs-2-and-travis-ci-we-beat-our-heads-against-a-wall-so-you-dont-have-to
-install:
-  - mkdir travis-phantomjs
-  - wget https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2 -O "$PWD"/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2
-  - tar -xvf "$PWD"/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2 -C "$PWD"/travis-phantomjs
-  - export PATH="$PWD/travis-phantomjs:$PATH"
+install: >
+  [ $TEST = test ]
+  && mkdir travis-phantomjs
+  && wget https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2 -O "$PWD"/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2
+  && tar -xvf "$PWD"/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2 -C "$PWD"/travis-phantomjs
+  && export PATH="$PWD/travis-phantomjs:$PATH"
 
 # Taken from https://github.com/typelevel/cats/blob/master/.travis.yml
 cache:
