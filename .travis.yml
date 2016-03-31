@@ -19,12 +19,12 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 
 script:
+  - if [ $STAGE = Fast ]; then x=''; else x=fast ; fi; echo "x=|${x}|"
   - >
     sbt ++$TRAVIS_SCALA_VERSION "set scalaJSStage in Global := ${STAGE}OptStage" 'show test/test:scalaJSLinkedFile'
     && sbt ++$TRAVIS_SCALA_VERSION "set scalaJSStage in Global := ${STAGE}OptStage" $TEST
   - >
-    if [ $STAGE = Fast ]; then x= ; else x=fast ; fi
-    ; touch test/target/scala-2.11/test-test-${x}opt.js
+    touch test/target/scala-2.11/test-test-${x}opt.js
     ; bin/checkDevOnly
 
 # Use PhantomJS 2
