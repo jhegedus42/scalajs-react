@@ -257,7 +257,7 @@ Example: This creates a route in the format of `item/<id>`.
 case class ItemPage(id: Int) extends MyPage
 
 val itemPage = ReactComponentB[ItemPage]("Item page")
-  .render(p => <.div(s"Info for item #${p.id}"))
+  .render(p => <.div(s"Info for item #${p.props.id}"))
   .build
 
 dynamicRouteCT("item" / int.caseClass[ItemPage])
